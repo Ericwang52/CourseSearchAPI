@@ -1,10 +1,12 @@
 import flask
+import bs4
 from flask import request, jsonify
+from bs4 import BeautifulSoup as soup  # HTML data structure
+from urllib.request import urlopen as uReq  # Web client
 
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
-
 
 @app.route('/', methods=['GET'])
 def home():
@@ -23,7 +25,6 @@ def search():
     return scrape(term, sale, 4)
 
 def scrape(term, sale, minrate):
-    print ("x")
     return term
 
 
