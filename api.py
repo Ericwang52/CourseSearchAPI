@@ -1,7 +1,10 @@
 import flask
 import bs4
+import requests
+import selenium
+from selenium import webdriver
 from flask import request, jsonify
-from bs4 import BeautifulSoup as soup  # HTML data structure
+from bs4 import BeautifulSoup # HTML data structure
 from urllib.request import urlopen as uReq  # Web client
 
 
@@ -22,10 +25,15 @@ def search():
         sale = (request.args['sale'])
     else:
         return "Error: No term field provided. Please specify an id."
-    return scrape(term, sale, 4)
+    return scrapedx(term, sale, 4)
 
-def scrape(term, sale, minrate):
-    return term
+def scrapedx(term, sale, minrate):
+    link = f"https://www.edx.org/search?q={term}"
+    driver = webdriver.PhantomJS(executable_path='/Applications/phantomjs-2.1.1-macosx/bin/phantomjs')
+    driver.get(link)
+    html_content=driver.page_source
+    soup = BeautifulSoup(html_content, "lxml")
+    return html_content
 
 
 app.run()
