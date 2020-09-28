@@ -25,15 +25,15 @@ def search():
         sale = (request.args['sale'])
     else:
         return "Error: No term field provided. Please specify an id."
-    return scrapedx(term, sale, 4)
-
-def scrapedx(term, sale, minrate):
-    link = "https://www.edx.org/search?q="+term
     options = webdriver.ChromeOptions()
     options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
     options.add_argument('window-size=800x841')
     options.add_argument('headless')
     driver = webdriver.Chrome(chrome_options=options)
+    return scrapedx(term, sale, 4, driver)
+
+def scrapedx(term, sale, minrate, driver):
+    link = "https://www.edx.org/search?q="+term
     driver.get(link)
     html_content=driver.page_source
     soup = BeautifulSoup(html_content, "html.parser")
