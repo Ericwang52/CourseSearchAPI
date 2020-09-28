@@ -18,7 +18,7 @@ def home():
 @app.route('/search', methods=['GET'])
 def search():
     if 'term' in request.args:
-        term = str(request.args['term'])
+        term = (request.args['term'])
     else:
         return "Error: No term field provided. Please specify an id."
     if 'sale' in request.args:
@@ -28,12 +28,27 @@ def search():
     return scrapedx(term, sale, 4)
 
 def scrapedx(term, sale, minrate):
-    link = f"https://www.edx.org/search?q={term}"
-    driver = webdriver.PhantomJS(executable_path='/Applications/phantomjs-2.1.1-macosx/bin/phantomjs')
+    link = "https://www.edx.org/search?q="+term
+    options = webdriver.ChromeOptions()
+    options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    options.add_argument('window-size=800x841')
+    options.add_argument('headless')
+    driver = webdriver.Chrome(chrome_options=options)
     driver.get(link)
     html_content=driver.page_source
-    soup = BeautifulSoup(html_content, "lxml")
-    return html_content
+    soup = BeautifulSoup(html_content, "html.parser")
+    courses= soup.find_all("div", {"class": "discovery-card Verified and Audit col col-xl-3 mb-4 scrollable-discovery-card-spacing"})
+    
+    finaldict={}
+    for i in range(len(courses)):
+        org="edx"
+        name=courses[i]["aria-label"]
+        provider=str(courses[i].find("span", {"width":"220"}).span.span.contents[0])
+        url="https://edx.org"+ courses[i].a["href"]
+        course={"org":org,"name":name, "provider":provider, "url":url}
+        finaldict[i]=course
+
+    return jsonify(finaldict)
 
 
 app.run()
