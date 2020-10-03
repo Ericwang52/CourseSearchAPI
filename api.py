@@ -3,6 +3,7 @@ import bs4
 import requests
 import selenium
 import sys, time
+import re
 from selenium import webdriver
 from flask import request, jsonify
 from bs4 import BeautifulSoup # HTML data structure
@@ -57,18 +58,22 @@ def scrapUdemy(term, sale, minrate, driver):
     time.sleep(5)
     html_content=driver.page_source
     soup = BeautifulSoup(html_content, "html.parser")
-    courses=soup.find_all("a", {"query": term.lower()})
+    courses=soup.find_all("a", {"query": True})
     finaldict={}
-    org="udemy"
+    #searchterm= soup.find("h1", {"class": "udlite-heading-xxl"}).split("for",1)[1] 
+    org="Udemy"
     for i in range(len(courses)):
         name=courses[i].div.find("div",{"class":"udlite-focus-visible-target udlite-heading-md course-card--course-title--2f7tE"}).contents[0]
         provider=courses[i].find("div", {"data-purpose": "safely-set-inner-html:course-card:visible-instructors"}).contents[0]
-        url="https://edx.org"+ courses[i]["href"]
-        price=
-        rating=
-        course={"org":org,"name":name, "provider":provider, "url":url}
+        url="https://udemy.com"+ courses[i]["href"]
+        rating= str(courses[i].find("span", {"data-purpose": "rating-number"}).contents[0])
+        if courses[i].find("div",{"data-purpose":"original-price-container"}) is not None:
+            price=str(courses[i].find("div",{"data-purpose":"original-price-container"}).div.findAll()[1].span.contents[0])
+        else:
+             price=str(courses[i].find("div",{"data-purpose":"course-price-text"}).findAll()[1].span.contents[0])
+        course={"org":org,"name":name, "provider":provider, "url":url, "rating": rating, "price": price}
         finaldict[i]=course
-    return html_content
+    return finaldict
 
 
 
