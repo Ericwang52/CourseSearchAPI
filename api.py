@@ -32,7 +32,7 @@ def search():
     options.add_argument('window-size=800x841')
     options.add_argument('headless')
     driver = webdriver.Chrome(options=options)
-    return scrapUdemy(term, sale, 4, driver)
+    return scrapCoursera(term, sale, 4, driver)
 
 def scrapedx(term, sale, minrate, driver):
     link = "https://www.edx.org/search?q="+term
@@ -72,6 +72,23 @@ def scrapUdemy(term, sale, minrate, driver):
         else:
              price=str(courses[i].find("div",{"data-purpose":"course-price-text"}).findAll()[1].span.contents[0])
         course={"org":org,"name":name, "provider":provider, "url":url, "rating": rating, "price": price}
+        finaldict[i]=course
+    return finaldict
+
+def scrapCoursera(term, sale, minrate, driver):
+    link = "https://www.coursera.org/search?query="+term
+    driver.get(link)
+    html_content=driver.page_source
+    soup = BeautifulSoup(html_content, "html.parser")
+    courses= soup.find_all("li", {"class": "ais-InfiniteHits-item"})
+    org="Coursera"
+    finaldict={}
+    for i in range(len(courses)):
+        name=courses[i].find("h2", {"class": "color-primary-text card-title headline-1-text"}).contents[0]
+        provider=str(courses[i].find("span", {"class":"partner-name"}).contents[0])
+        url="https://coursera.org"+ courses[i].div.a["href"]
+        rating=courses[i].find("span", {"class":"ratings-text"}).contents[0]
+        course={"org":org,"name":name, "provider":provider, "url":url, "rating": rating}
         finaldict[i]=course
     return finaldict
 
