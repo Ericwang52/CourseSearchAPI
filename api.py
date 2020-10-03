@@ -32,7 +32,9 @@ def search():
     options.add_argument('window-size=800x841')
     options.add_argument('headless')
     driver = webdriver.Chrome(options=options)
-    return scrapCoursera(term, sale, 4, driver)
+
+    finaldict= {"edx":scrapedx(term, sale, 4, driver), "Udemy":scrapUdemy(term, sale, 4, driver), "Coursera":scrapCoursera(term, sale, 4, driver)}
+    return jsonify(finaldict)
 
 def scrapedx(term, sale, minrate, driver):
     link = "https://www.edx.org/search?q="+term
@@ -46,10 +48,10 @@ def scrapedx(term, sale, minrate, driver):
         name=courses[i]["aria-label"]
         provider=str(courses[i].find("span", {"width":"220"}).span.span.contents[0])
         url="https://edx.org"+ courses[i].a["href"]
-        course={"org":org,"name":name, "provider":provider, "url":url}
+        course={"name":name, "provider":provider, "url":url}
         finaldict[i]=course
 
-    return jsonify(finaldict)
+    return finaldict
 def scrapUdemy(term, sale, minrate, driver):
     link = "https://www.udemy.com/courses/search/?q=" + term
    # driver.implicitly_wait(10)
@@ -71,7 +73,7 @@ def scrapUdemy(term, sale, minrate, driver):
             price=str(courses[i].find("div",{"data-purpose":"original-price-container"}).div.findAll()[1].span.contents[0])
         else:
              price=str(courses[i].find("div",{"data-purpose":"course-price-text"}).findAll()[1].span.contents[0])
-        course={"org":org,"name":name, "provider":provider, "url":url, "rating": rating, "price": price}
+        course={"name":name, "provider":provider, "url":url, "rating": rating, "price": price}
         finaldict[i]=course
     return finaldict
 
@@ -88,7 +90,7 @@ def scrapCoursera(term, sale, minrate, driver):
         provider=str(courses[i].find("span", {"class":"partner-name"}).contents[0])
         url="https://coursera.org"+ courses[i].div.a["href"]
         rating=courses[i].find("span", {"class":"ratings-text"}).contents[0]
-        course={"org":org,"name":name, "provider":provider, "url":url, "rating": rating}
+        course={"name":name, "provider":provider, "url":url, "rating": rating}
         finaldict[i]=course
     return finaldict
 
