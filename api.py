@@ -32,21 +32,28 @@ def search():
     options.add_argument('window-size=800x841')
     options.add_argument('headless')
     driver = webdriver.Chrome(options=options)
-
     finaldict= {"edx":scrapedx(term, sale, 4, driver), "Udemy":scrapUdemy(term, sale, 4, driver), "Coursera":scrapCoursera(term, sale, 4, driver)}
     return jsonify(finaldict)
 
 def scrapedx(term, sale, minrate, driver):
     link = "https://www.edx.org/search?q="+term
     driver.get(link)
+    time.sleep(2)
+    pbutton=driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/main/div/div[2]/div/div[1]/div[1]/div/button')
+    pbutton.click()
+    time.sleep(2)
+
     html_content=driver.page_source
     soup = BeautifulSoup(html_content, "html.parser")
-    courses= soup.find_all("div", {"class": "discovery-card Verified and Audit col col-xl-3 mb-4 scrollable-discovery-card-spacing"})
+    courses= soup.find_all("div", {"class": "discovery-card-inner-wrapper"})
+    if courses is None:
+        return
     org="edx"
+
     finaldict={}
     for i in range(len(courses)):
         name=courses[i]["aria-label"]
-        provider=str(courses[i].find("span", {"width":"220"}).span.span.contents[0])
+        provider=str(courses[i].find("div", {"class":"provider"}).findAll()[1].span.span.contents[0])
         url="https://edx.org"+ courses[i].a["href"]
         course={"name":name, "provider":provider, "url":url}
         finaldict[i]=course
@@ -61,6 +68,8 @@ def scrapUdemy(term, sale, minrate, driver):
     html_content=driver.page_source
     soup = BeautifulSoup(html_content, "html.parser")
     courses=soup.find_all("a", {"query": True})
+    if courses is None:
+        return
     finaldict={}
     #searchterm= soup.find("h1", {"class": "udlite-heading-xxl"}).split("for",1)[1] 
     org="Udemy"
@@ -83,6 +92,8 @@ def scrapCoursera(term, sale, minrate, driver):
     html_content=driver.page_source
     soup = BeautifulSoup(html_content, "html.parser")
     courses= soup.find_all("li", {"class": "ais-InfiniteHits-item"})
+    if courses is None:
+        return
     org="Coursera"
     finaldict={}
     for i in range(len(courses)):
