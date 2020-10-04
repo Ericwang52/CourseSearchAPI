@@ -5,6 +5,5 @@ flask
 bs4
 requests
 selenium
-sys
 time
 re
