@@ -1,3 +1,10 @@
 django
 gunicorn
 django-heroku
+flask
+bs4
+requests
+selenium
+sys
+time
+re
