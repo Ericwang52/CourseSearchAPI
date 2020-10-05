@@ -113,8 +113,8 @@ def scrapCoursera(term, sale, minrate, driver):
         name=str(courses[i].find("h2", {"class": "color-primary-text card-title headline-1-text"}).contents[0])
         provider=str(courses[i].find("span", {"class":"partner-name"}).contents[0])
         url="https://coursera.org"+ courses[i].div.a["href"]
-        rating=str(courses[i].find("span", {"class":"ratings-text"}).contents[0])
-        course={"name":name, "provider":provider, "url":url, "rating": rating}
+       # rating=str(courses[i].find("span", {"class":"ratings-text"}).contents[0])
+        course={"name":name, "provider":provider, "url":url}
         finaldict[i]=course
     return finaldict
 def scrapUdacity(term, sale, minrate, driver):
