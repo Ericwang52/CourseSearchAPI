@@ -106,6 +106,8 @@ def scrapCoursera(term, sale, minrate, driver):
     if courses is None:
         return
     org="Coursera"
+    if soup.find("div", {"class":"rc-NoResultsSearchPage"}) is not None:
+        return
     finaldict={}
     for i in range(len(courses)):
         name=str(courses[i].find("h2", {"class": "color-primary-text card-title headline-1-text"}).contents[0])
