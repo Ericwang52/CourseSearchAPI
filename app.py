@@ -35,14 +35,21 @@ def search():
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-    finaldict= {"edx":scrapedx(term, sale, 4, driver), "Udemy":scrapUdemy(term, sale, 4, driver), "Coursera":scrapCoursera(term, sale, 4, driver), "Udacity":scrapUdacity(term, sale, 4, driver)}
+    finaldict= {"edx":scrapedx(term, sale, 4, driver), "Coursera":scrapCoursera(term, sale, 4, driver), "Udacity":scrapUdacity(term, sale, 4, driver)}
     driver.quit()
+    #"Udemy":scrapUdemy(term, sale, 4, driver)
     return jsonify(finaldict)
 
 def scrapedx(term, sale, minrate, driver):
     link = "https://www.edx.org/search?q="+term
     driver.get(link)
     time.sleep(2)
+    html_content=driver.page_source
+    soup = BeautifulSoup(html_content, "html.parser")
+    courses= soup.find_all("div", {"class": "discovery-card-inner-wrapper"})
+    if courses is None:
+        return
+    org="edx"
     pbutton=driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/main/div/div[2]/div/div[1]/div[1]/div/button')
     pbutton.click()
     time.sleep(2)
