@@ -128,5 +128,5 @@ def scrapUdacity(term, sale, minrate, driver):
     return finaldict
 
 
-
-app.run()
+if __name__ == '__main__':
+    app.run()
