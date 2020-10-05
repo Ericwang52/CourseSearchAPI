@@ -36,6 +36,7 @@ def search():
     chrome_options.add_argument("--no-sandbox")
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     finaldict= {"edx":scrapedx(term, sale, 4, driver), "Udemy":scrapUdemy(term, sale, 4, driver), "Coursera":scrapCoursera(term, sale, 4, driver), "Udacity":scrapUdacity(term, sale, 4, driver)}
+    driver.quit()
     return jsonify(finaldict)
 
 def scrapedx(term, sale, minrate, driver):
@@ -78,14 +79,14 @@ def scrapUdemy(term, sale, minrate, driver):
     org="Udemy"
     for i in range(len(courses)):
         name=str(courses[i].div.find("div",{"class":"udlite-focus-visible-target udlite-heading-md course-card--course-title--2f7tE"}).contents[0])
-        provider=str(courses[i].find("div", {"data-purpose": "safely-set-inner-html:course-card:visible-instructors"}).contents[0])
+        #provider=str(courses[i].find("div", {"data-purpose": "safely-set-inner-html:course-card:visible-instructors"}).contents[0])
         url="https://udemy.com"+ courses[i]["href"]
         rating= str(courses[i].find("span", {"data-purpose": "rating-number"}).contents[0])
         if courses[i].find("div",{"data-purpose":"original-price-container"}) is not None:
             price=str(courses[i].find("div",{"data-purpose":"original-price-container"}).div.findAll()[1].span.contents[0])
         else:
              price=str(courses[i].find("div",{"data-purpose":"course-price-text"}).findAll()[1].span.contents[0])
-        course={"name":name, "provider":provider, "url":url, "rating": rating, "price": price}
+        course={"name":name, "url":url, "rating": rating, "price": price}
         finaldict[i]=course
     return finaldict
 
