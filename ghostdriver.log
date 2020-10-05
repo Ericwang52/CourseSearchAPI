@@ -1,0 +1,29 @@
+[INFO  - 2020-09-27T01:30:39.274Z] GhostDriver - Main - running on port 64134
+[INFO  - 2020-09-27T01:30:39.773Z] Session [0d2b47a0-0061-11eb-b8ad-e11a00d4570b] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1","webSecurityEnabled":true}
+[INFO  - 2020-09-27T01:30:39.773Z] Session [0d2b47a0-0061-11eb-b8ad-e11a00d4570b] - page.customHeaders:  - {}
+[INFO  - 2020-09-27T01:30:39.773Z] Session [0d2b47a0-0061-11eb-b8ad-e11a00d4570b] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"mac-unknown-64bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
+[INFO  - 2020-09-27T01:30:39.773Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: 0d2b47a0-0061-11eb-b8ad-e11a00d4570b
+[ERROR - 2020-09-27T01:30:42.105Z] Session [0d2b47a0-0061-11eb-b8ad-e11a00d4570b] - page.onError - msg: Invariant Violation: [React Intl] The `Intl` APIs must be available in the runtime, and do not appear to be built-in. An `Intl` polyfill should be loaded.
+See: http://formatjs.io/guides/runtime-environments/
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2020-09-27T01:30:42.105Z] Session [0d2b47a0-0061-11eb-b8ad-e11a00d4570b] - page.onError - stack:
+  al (https://www.edx.org/commons-907a8452b916b884661f.js:1)
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2020-09-27T01:30:42.117Z] Session [0d2b47a0-0061-11eb-b8ad-e11a00d4570b] - page.onError - msg: Invariant Violation: [React Intl] The `Intl` APIs must be available in the runtime, and do not appear to be built-in. An `Intl` polyfill should be loaded.
+See: http://formatjs.io/guides/runtime-environments/
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2020-09-27T01:30:42.117Z] Session [0d2b47a0-0061-11eb-b8ad-e11a00d4570b] - page.onError - stack:
+  al (https://www.edx.org/commons-907a8452b916b884661f.js:1)
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2020-09-27T01:30:42.117Z] Session [0d2b47a0-0061-11eb-b8ad-e11a00d4570b] - page.onError - msg: [object Object]
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2020-09-27T01:30:42.117Z] Session [0d2b47a0-0061-11eb-b8ad-e11a00d4570b] - page.onError - stack:
+  error (https://www.googletagmanager.com/gtm.js?id=GTM-PLVRLF&l=dataLayer:720)
+  onerror (https://www.googletagmanager.com/gtm.js?id=GTM-PLVRLF&l=dataLayer:728)
+
+  phantomjs://platform/console++.js:263 in error
