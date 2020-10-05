@@ -44,10 +44,10 @@ def scrapedx(term, sale, minrate, driver):
     link = "https://www.edx.org/search?q="+term
     driver.get(link)
     time.sleep(2)
-    html_content=driver.page_source
-    soup = BeautifulSoup(html_content, "html.parser")
-    courses= soup.find_all("div", {"class": "discovery-card-inner-wrapper"})
-    if courses is None:
+    html_contentt=driver.page_source
+    soupp = BeautifulSoup(html_contentt, "html.parser")
+    alert= soupp.find("div", {"class": "alert-dialog"})
+    if alert is not None:
         return
     org="edx"
     pbutton=driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/main/div/div[2]/div/div[1]/div[1]/div/button')
