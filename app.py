@@ -24,10 +24,6 @@ def search():
         term = (request.args['term'])
     else:
         return "Error: No term field provided. Please specify an id."
-    if 'sale' in request.args:
-        sale = (request.args['sale'])
-    else:
-        return "Error: No term field provided. Please specify an id."
         
     chrome_options = webdriver.ChromeOptions()
     chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
@@ -41,11 +37,11 @@ def search():
    # options.add_argument('window-size=800x841')
    # options.add_argument('headless')
    # driver = webdriver.Chrome(options=options)
-    finaldict= {"edx":scrapedx(term, sale, 4, driver), "Coursera":scrapCoursera(term, sale, 4, driver),"Udemy" : scrapUdemy(term, sale, 4, driver), "Udacity":scrapUdacity(term, sale, 4, driver)}
+    finaldict= {"edx":scrapedx(term, driver), "Coursera":scrapCoursera(term, driver),"Udemy" : scrapUdemy(term, driver), "Udacity":scrapUdacity(term, driver)}
     driver.quit()
     return jsonify(finaldict)
 
-def scrapedx(term, sale, minrate, driver):
+def scrapedx(term, driver):
     link = "https://www.edx.org/search?q="+term
     driver.get(link)
 
@@ -75,7 +71,7 @@ def scrapedx(term, sale, minrate, driver):
         finaldict[i]=course
 
     return finaldict
-def scrapUdemy(term, sale, minrate, driver):
+def scrapUdemy(term, driver):
     link = "https://www.udemy.com/courses/search/?q=" + term
    # driver.implicitly_wait(10)
 
@@ -101,7 +97,7 @@ def scrapUdemy(term, sale, minrate, driver):
         finaldict[i]=course
     return finaldict
 
-def scrapCoursera(term, sale, minrate, driver):
+def scrapCoursera(term, driver):
     link = "https://www.coursera.org/search?query="+term
     driver.get(link)
     html_content=driver.page_source
@@ -124,7 +120,7 @@ def scrapCoursera(term, sale, minrate, driver):
         course={"name":name, "provider":provider, "url":url, "rating":rating}
         finaldict[i]=course
     return finaldict
-def scrapUdacity(term, sale, minrate, driver):
+def scrapUdacity(term, driver):
     link = "https://www.udacity.com/courses/all?search="+term
     driver.get(link)
     html_content=driver.page_source
