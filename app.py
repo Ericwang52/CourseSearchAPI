@@ -57,7 +57,7 @@ def scrapedx(term, sale, minrate, driver):
     org="edx"
     pbutton=driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/main/div/div[2]/div/div[1]/div[1]/div/button')
     pbutton.click()
-
+    
     time.sleep(1)
     html_content=driver.page_source
     soup = BeautifulSoup(html_content, "html.parser")
@@ -117,7 +117,10 @@ def scrapCoursera(term, sale, minrate, driver):
         name=str(courses[i].find("h2", {"class": "color-primary-text card-title headline-1-text"}).contents[0])
         provider=str(courses[i].find("span", {"class":"partner-name"}).contents[0])
         url="https://coursera.org"+ courses[i].div.a["href"]
-        rating=str(courses[i].find("span", {"class":"ratings-text"}).contents[0])
+        if courses[i].find("span", {"class":"ratings-text"}) is None:
+            rating= "N/A"
+        else: 
+            rating=str(courses[i].find("span", {"class":"ratings-text"}).contents[0])
         course={"name":name, "provider":provider, "url":url, "rating":rating}
         finaldict[i]=course
     return finaldict
