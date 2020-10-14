@@ -33,10 +33,10 @@ def search():
     chrome_options.add_argument("--no-sandbox")
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
    # options = webdriver.ChromeOptions()
-   # options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-   # options.add_argument('window-size=800x841')
-   # options.add_argument('headless')
-   # driver = webdriver.Chrome(options=options)
+    #options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    #options.add_argument('window-size=800x841')
+    #options.add_argument('headless')
+    #driver = webdriver.Chrome(options=options)
     finaldict= {"edx":scrapedx(term, driver), "Coursera":scrapCoursera(term, driver),"Udemy" : scrapUdemy(term, driver), "Udacity":scrapUdacity(term, driver)}
     driver.quit()
     return jsonify(finaldict)
@@ -92,7 +92,7 @@ def scrapUdemy(term, driver):
         if courses[i].find("div",{"data-purpose":"original-price-container"}) is not None:
             price=str(courses[i].find("div",{"data-purpose":"original-price-container"}).div.findAll()[1].span.contents[0])
         else:
-             price=str(courses[i].find("div",{"data-purpose":"course-price-text"}).findAll()[1].span.contents[0])
+             price="N/A"
         course={"name":name, "provider": provider, "url":url, "rating": rating, "price": price}
         finaldict[i]=course
     return finaldict
