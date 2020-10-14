@@ -28,6 +28,7 @@ def search():
         sale = (request.args['sale'])
     else:
         return "Error: No term field provided. Please specify an id."
+        
     chrome_options = webdriver.ChromeOptions()
     chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
     chrome_options.add_argument('window-size=800x841')
@@ -35,25 +36,29 @@ def search():
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-    finaldict= {"edx":scrapedx(term, sale, 4, driver), "Coursera":scrapCoursera(term, sale, 4, driver), "Udacity":scrapUdacity(term, sale, 4, driver)}
+   # options = webdriver.ChromeOptions()
+   # options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+   # options.add_argument('window-size=800x841')
+   # options.add_argument('headless')
+   # driver = webdriver.Chrome(options=options)
+    finaldict= {"edx":scrapedx(term, sale, 4, driver), "Coursera":scrapCoursera(term, sale, 4, driver),"Udemy" : scrapUdemy(term, sale, 4, driver), "Udacity":scrapUdacity(term, sale, 4, driver)}
     driver.quit()
-    #"Udemy":scrapUdemy(term, sale, 4, driver)
     return jsonify(finaldict)
 
 def scrapedx(term, sale, minrate, driver):
     link = "https://www.edx.org/search?q="+term
     driver.get(link)
-    time.sleep(2)
+
     html_contentt=driver.page_source
     soupp = BeautifulSoup(html_contentt, "html.parser")
-    alert= soupp.find("div", {"class": "alert-dialog"})
-    if alert is not None:
+    alert= soupp.find("button", {"class": "search-link-card"})
+    if alert is None:
         return
     org="edx"
     pbutton=driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/main/div/div[2]/div/div[1]/div[1]/div/button')
     pbutton.click()
-    time.sleep(2)
 
+    time.sleep(1)
     html_content=driver.page_source
     soup = BeautifulSoup(html_content, "html.parser")
     courses= soup.find_all("div", {"class": "discovery-card-inner-wrapper"})
@@ -82,18 +87,17 @@ def scrapUdemy(term, sale, minrate, driver):
     if courses is None:
         return
     finaldict={}
-    #searchterm= soup.find("h1", {"class": "udlite-heading-xxl"}).split("for",1)[1] 
     org="Udemy"
     for i in range(len(courses)):
         name=str(courses[i].div.find("div",{"class":"udlite-focus-visible-target udlite-heading-md course-card--course-title--2f7tE"}).contents[0])
-        #provider=str(courses[i].find("div", {"data-purpose": "safely-set-inner-html:course-card:visible-instructors"}).contents[0])
+        provider=str(courses[i].find("div", {"data-purpose": "safely-set-inner-html:course-card:visible-instructors"}).contents[0])
         url="https://udemy.com"+ courses[i]["href"]
         rating= str(courses[i].find("span", {"data-purpose": "rating-number"}).contents[0])
         if courses[i].find("div",{"data-purpose":"original-price-container"}) is not None:
             price=str(courses[i].find("div",{"data-purpose":"original-price-container"}).div.findAll()[1].span.contents[0])
         else:
              price=str(courses[i].find("div",{"data-purpose":"course-price-text"}).findAll()[1].span.contents[0])
-        course={"name":name, "url":url, "rating": rating, "price": price}
+        course={"name":name, "provider": provider, "url":url, "rating": rating, "price": price}
         finaldict[i]=course
     return finaldict
 
@@ -113,8 +117,8 @@ def scrapCoursera(term, sale, minrate, driver):
         name=str(courses[i].find("h2", {"class": "color-primary-text card-title headline-1-text"}).contents[0])
         provider=str(courses[i].find("span", {"class":"partner-name"}).contents[0])
         url="https://coursera.org"+ courses[i].div.a["href"]
-       # rating=str(courses[i].find("span", {"class":"ratings-text"}).contents[0])
-        course={"name":name, "provider":provider, "url":url}
+        rating=str(courses[i].find("span", {"class":"ratings-text"}).contents[0])
+        course={"name":name, "provider":provider, "url":url, "rating":rating}
         finaldict[i]=course
     return finaldict
 def scrapUdacity(term, sale, minrate, driver):
